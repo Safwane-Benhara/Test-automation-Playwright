@@ -4,6 +4,8 @@ import com.microsoft.playwright.*;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 
+import java.util.List;
+
 public class PlaywrightManager {
     public static Playwright playwright;
     public static Browser browser;
@@ -13,14 +15,14 @@ public class PlaywrightManager {
     @Before
     public void setUp(){
         playwright=Playwright.create();
-        browser=playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
-        context=browser.newContext();
+        browser=playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setArgs(List.of("--start-maximized")));
+        context=browser.newContext( new Browser.NewContextOptions().setViewportSize(null));
         page=context.newPage();
     }
 
     @After
-    public void tearDown(){
-        //Thread.sleep(3000);
+    public void tearDown() throws InterruptedException {
+        //Thread.sleep(30000);
         if(browser !=null)
             browser.close();
         if(playwright!=null)
